@@ -1,19 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Test Server</title>
-    <link rel="stylesheet" href="./style.css">
-    <script src="/socket.io/socket.io.js"></script>
-</head>
-<body>
-    <h1> Test Server is Running</h1>
 
-    <button onclick="countUp()">Click ME</button>
-    <h3>Count: <span id="count_id"></span></h3>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type="image/png" href="assets/favicon.png">
+
+    <title>EmojiChat | Express youself!</title>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="chatbox">
+            <div class="chatbox__messgbox">
+                <div class="chatbox__messg-item">
+                    <div class="chatbox__messg-item-sender">
+                        Someone
+                    </div>
+                    <div class="chatbox__messg-item-messg">
+                        Hey! how are you!
+                    </div>
+                </div>
+                <div class="chatbox__messg-item">
+                    <div class="chatbox__messg-item-sender">
+                        Someone
+                    </div>
+                    <div class="chatbox__messg-item-messg">
+                        Hey! how are you-----------------  
+                        ----- -!
+                    </div>
+                </div>
+            </div>
+            <div class="chatbox__typebox">
+                <input type="text" class="chatbox__input"></input>
+                <button class="chatbox__send-btn">Send</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-container">
+        <div class="footer">
+            <div class="footer__page-views">
+                Page Views:
+                <span class="footer__page-views-number">
+                    000
+                </span>
+            </div>
+        </div>
+
+        <div class="footer">
+            &lt; EmojiChat &gt; ⏲️ By Nilay Savant
+        </div>
+    </div>
 
     <script src="./script.js"></script>
 </body>
+
 </html>

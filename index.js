@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 3000
 app.use(morgan('dev'))
 
 /** Custom Variables START -----------------------------------------------------*/
-let COUNT = 0
+
 /** Custom Variables END -----------------------------------------------------*/
 
 /** to parse the body of post requests -> bodyParser : */
