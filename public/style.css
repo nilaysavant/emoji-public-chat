@@ -101,6 +101,18 @@ body {
   color: var(--color-grey-light-3);
 }
 
+.header__bold {
+  font-weight: bold;
+  color: #222222;
+  background-color: #90c8e2;
+  border-radius: 10rem;
+  padding: 1rem 2rem;
+}
+
+.header__page-views {
+  font-size: 1rem;
+}
+
 .header-2 {
   color: var(--color-grey-light-3);
   text-align: center;

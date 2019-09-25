@@ -13,6 +13,21 @@
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--color-grey-light-3);
+
+    &__bold {
+        // font-size: 1.5rem;
+        font-weight: bold;
+        color: rgb(34, 34, 34);
+        background-color: rgb(144, 200, 226);
+        border-radius: 10rem;
+        padding: 1rem 2rem;
+    }
+
+    &__page-views {
+        font-size: 1rem;
+    }
+
+    &__page-views-number {}
 }
 
 .header-2 {
@@ -20,9 +35,6 @@
     text-align: center;
     font-size: 1.2rem;
 
-    &__page-views {}
-
-    &__page-views-number {}
 }
 
 /* Chatbox */
@@ -123,4 +135,3 @@
         flex: 0 0 25%;
     }
 }
-
