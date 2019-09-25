@@ -93,6 +93,15 @@ const databaseInit = async (initDataObj) => {
   console.log('DB init complete...')
 }
 
+/** UUDI (unique id genrator) */
+/** ref:https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript */
+function uuidv4() {
+  return 'xxy-xyx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+  });
+}
+
 /** CUSTOM FUNCTION END --------------------------------------------------------- */
 
 
@@ -138,9 +147,11 @@ const main = async function () {
         /** increment for new user */
         ID_GEN += 1
 
+        let id = uuidv4()
+
         /** send packet */
         send({
-          new_user: `user${ID_GEN}`,
+          new_user: `user${id}`,
           old_messages: MESSAGES_LIST
         })
       } else {
