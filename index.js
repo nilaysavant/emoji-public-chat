@@ -33,6 +33,9 @@ app.use(morgan('dev'))
 
 /** Custom Variables START -----------------------------------------------------*/
 
+/** Messages list Global Object*/
+let MESSAGES_LIST = []
+
 /** Custom Variables END -----------------------------------------------------*/
 
 /** to parse the body of post requests -> bodyParser : */
@@ -117,9 +120,14 @@ const main = async function () {
   io.on('connection', (socket) => {
     console.log('a user connected');
     socket.on('chat', (messg, send) => {
-      console.log({ Recvd: messg })
-      // send(messg)
-      io.emit('chat', messg)
+      if (messg !== undefined && messg !== null) {
+        console.log({ Recvd: messg })
+        // send(messg)
+        /** broadcast to everyone in chat */
+        io.emit('chat', messg)
+      } else {
+        console.error("Invalid Messg recvd !")
+      }
     });
 
     /** ref: https://stackoverflow.com/questions/9230647/socket-io-setinterval-way */
