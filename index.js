@@ -118,9 +118,10 @@ const main = async function () {
     console.log('a user connected');
     socket.on('chat', (messg, send) => {
       console.log({ Recvd: messg })
-      send(messg)
+      // send(messg)
+      io.emit('chat', messg)
     });
-    
+
     /** ref: https://stackoverflow.com/questions/9230647/socket-io-setinterval-way */
     // let i = 0
     // setInterval(()=> {
