@@ -51,6 +51,17 @@ const createChatMessgItem = (sender_name, date_time, messg) => {
 
 }
 
+/** send key on enter press */
+typeBox.addEventListener("keyup", function(event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      sendButton.click();
+    }
+  });
+
 /** Loads Initial chat history */
 const loadInitMessgs = () => {
     socket.emit('chat-init', 'init', (data) => {
