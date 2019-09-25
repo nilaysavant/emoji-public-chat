@@ -41,13 +41,19 @@
             // background-color: rgb(44, 44, 44);
             flex: 0 0 35%;
             text-align: center;
-            color: #5295CD;
+            // color: #5295CD;
+            color: #9CDCFE;
             // white-space: nowrap;
             // margin: 1rem 1rem; 
         }
 
         &-tag {
-            color: #9CDCFE;
+            color: #5295CD;
+        }
+
+        &-date {
+            color: #5295CD;
+            font-size: 1.2rem;
         }
 
         &-messg {

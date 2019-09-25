@@ -133,11 +133,16 @@ body {
       -ms-flex: 0 0 35%;
           flex: 0 0 35%;
   text-align: center;
-  color: #5295CD;
+  color: #9CDCFE;
 }
 
 .chatbox__messg-item-tag {
-  color: #9CDCFE;
+  color: #5295CD;
+}
+
+.chatbox__messg-item-date {
+  color: #5295CD;
+  font-size: 1.2rem;
 }
 
 .chatbox__messg-item-messg {
