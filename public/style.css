@@ -150,7 +150,7 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
   max-height: 50rem;
 }

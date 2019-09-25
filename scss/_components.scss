@@ -58,7 +58,7 @@
         align-items: center;
         flex-direction: column;
         // justify-content: flex-end;
-        overflow-y: auto;
+        overflow-y: scroll;
         overflow-x: hidden;
         max-height: 50rem;
     }
