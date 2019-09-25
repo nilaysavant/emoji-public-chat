@@ -11,6 +11,7 @@ const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
+const randName = require('random-name')
 
 /** load env vars */
 require("dotenv").config()
@@ -152,6 +153,7 @@ const main = async function () {
         /** send packet */
         send({
           new_user: `user${id}`,
+          name: `${randName.first()} ${randName.last()}`,
           old_messages: MESSAGES_LIST
         })
       } else {

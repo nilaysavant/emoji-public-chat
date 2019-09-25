@@ -13,6 +13,8 @@ let firstTime = true
 
 /** user id */
 let USER_ID = null
+/** user name */
+let USER_NAME = null
 
 /** global vars end ----------------- */
 
@@ -72,9 +74,14 @@ const loadInitMessgs = () => {
             } else {
                 console.error('No ID recvd!')
             }
+            if(data['name']) {
+                USER_NAME = data['name']
+            } else {
+                console.error("User Name invalid!")
+            }
             if (data['old_messages']) {
                 data['old_messages'].forEach((messg, index) => {
-                    createChatMessgItem(messg.user_id, messg.datetime, messg.text)
+                    createChatMessgItem(messg.name, messg.datetime, messg.text)
                 })
                 scrollToBottom(chatbox_messgbox)
             } else {
@@ -112,6 +119,7 @@ const sendMessage = () => {
 
     let message = {
         user_id: user,
+        name: USER_NAME,
         datetime: datetime,
         text: message_text
     }
@@ -121,7 +129,7 @@ const sendMessage = () => {
     socket.emit('chat', message, (data) => {
         console.log("Recvd:", data);
         if (data || data === false) {
-            createChatMessgItem(data['user_id'], data['datetime'], data['text'])
+            createChatMessgItem(data['name'], data['datetime'], data['text'])
             scrollToBottom(chatbox_messgbox)
         }
     });
@@ -140,7 +148,7 @@ loadInitMessgs()
 socket.on('chat', (data) => {
     console.log("Recvd:", data)
     if (data || data === false) {
-        createChatMessgItem(data['user_id'], data['datetime'], data['text'])
+        createChatMessgItem(data['name'], data['datetime'], data['text'])
         scrollToBottom(chatbox_messgbox)
     }
 })
