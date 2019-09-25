@@ -4,6 +4,11 @@ const socket = io();
 let sendButton = document.getElementById("chat-send-btn")
 let typeBox = document.getElementById("chat-type-box")
 
+let chatbox_messgbox = document.getElementById("chatbox-messgbox-id")
+
+
+
+/** custom functions start -----------*/
 
 /** creates the html for messg item */
 const createChatMessgItem = (sender_name, date_time, messg) => {
@@ -31,9 +36,24 @@ const createChatMessgItem = (sender_name, date_time, messg) => {
 
 }
 
+let firstTime = true
+/** chat scroll to bottm */
+const scrollToBottom = (container) => {
+    console.table({
+        scrollTop: container.scrollTop,
+        clientHeight: container.clientHeight,
+        sum: container.scrollTop + container.clientHeight,
+        scrollHeight: container.scrollHeight
+    })
+    if (firstTime) {
+        container.scrollTop = container.scrollHeight;
+        firstTime = false;
+    } else if ((container.scrollHeight - container.scrollTop + container.clientHeight) < 1060) {
+        container.scrollTop = container.scrollHeight;
+    }
+}
 
-
-/** custom functions start -----------*/
+/** send messg via sockets */
 const sendMessage = () => {
     let message = typeBox.value
     console.log("Sent:", message)
@@ -42,20 +62,22 @@ const sendMessage = () => {
         console.log("Recvd:", data);
         if (data || data === false) {
             createChatMessgItem('Someya Walva', '20/09/2019 15:35', data)
+            scrollToBottom(chatbox_messgbox)
         }
     });
 }
 
-const countUp = () => {
-    console.log("count up clicked")
-    socket.emit('chat', 'up', (data) => {
-        console.log("count:", data);
-        if (data || data === false) {
-            count_box.innerHTML = parseInt(data)
-        }
-    });
-}
 /** custom functions end -----------*/
 
+/** main exec */
 
 sendButton.onclick = sendMessage
+
+/** listen for chats */
+socket.on('chat', (data) => {
+    console.log("Recvd:", data)
+    if (data || data === false) {
+        createChatMessgItem('Someya Walva', '20/09/2019 15:35', data)
+        scrollToBottom(chatbox_messgbox)
+    }
+})
