@@ -23,7 +23,7 @@ let USER_ID = null
  */
 const getUTCDateTime = () => {
     return new Date().toISOString().replace('T', ' ').substr(0, 19)
-  }
+}
 
 /** creates the html for messg item */
 const createChatMessgItem = (sender_name, date_time, messg) => {
@@ -52,15 +52,15 @@ const createChatMessgItem = (sender_name, date_time, messg) => {
 }
 
 /** send key on enter press */
-typeBox.addEventListener("keyup", function(event) {
+typeBox.addEventListener("keyup", function (event) {
     // Number 13 is the "Enter" key on the keyboard
     if (event.keyCode === 13) {
-      // Cancel the default action, if needed
-      event.preventDefault();
-      // Trigger the button element with a click
-      sendButton.click();
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        sendButton.click();
     }
-  });
+});
 
 /** Loads Initial chat history */
 const loadInitMessgs = () => {
@@ -72,8 +72,8 @@ const loadInitMessgs = () => {
             } else {
                 console.error('No ID recvd!')
             }
-            if(data['old_messages']){
-                data['old_messages'].forEach((messg, index)=> {
+            if (data['old_messages']) {
+                data['old_messages'].forEach((messg, index) => {
                     createChatMessgItem(messg.user_id, messg.datetime, messg.text)
                 })
                 scrollToBottom(chatbox_messgbox)
@@ -115,7 +115,7 @@ const sendMessage = () => {
         datetime: datetime,
         text: message_text
     }
-    
+
     console.log("Send:", message)
 
     socket.emit('chat', message, (data) => {
@@ -140,7 +140,7 @@ loadInitMessgs()
 socket.on('chat', (data) => {
     console.log("Recvd:", data)
     if (data || data === false) {
-        createChatMessgItem(data['user_id'], data['datetime'], data['text'])        
+        createChatMessgItem(data['user_id'], data['datetime'], data['text'])
         scrollToBottom(chatbox_messgbox)
     }
 })
