@@ -137,6 +137,7 @@ body {
           box-sizing: border-box;
   min-height: 50rem;
   max-width: 35rem;
+  max-height: 82vh;
   border: 8px inset #383838;
   -webkit-box-shadow: 6px 6px 18px #1f1f1f;
           box-shadow: 6px 6px 18px #1f1f1f;
