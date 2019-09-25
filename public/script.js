@@ -38,6 +38,7 @@ const createChatMessgItem = (sender_name, date_time, messg) => {
 
 let firstTime = true
 /** chat scroll to bottm */
+/** REF: https://stackoverflow.com/questions/25505778/automatically-scroll-down-chat-div */
 const scrollToBottom = (container) => {
     // console.table({
     //     scrollTop: container.scrollTop,

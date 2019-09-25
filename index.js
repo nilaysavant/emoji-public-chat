@@ -120,6 +120,8 @@ const main = async function () {
       console.log({ Recvd: messg })
       send(messg)
     });
+    
+    /** ref: https://stackoverflow.com/questions/9230647/socket-io-setinterval-way */
     // let i = 0
     // setInterval(()=> {
     //   i += 1
