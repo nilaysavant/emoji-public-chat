@@ -6,9 +6,24 @@ let typeBox = document.getElementById("chat-type-box")
 
 let chatbox_messgbox = document.getElementById("chatbox-messgbox-id")
 
+/** custom global vars ---------------*/
 
+/** for scroll */
+let firstTime = true
+
+/** user id */
+let USER_ID = null
+
+/** global vars end ----------------- */
 
 /** custom functions start -----------*/
+
+/**
+ * Function returns UTC date time in yyyy-mm-dd hh:mm:ss
+ */
+const getUTCDateTime = () => {
+    return new Date().toISOString().replace('T', ' ').substr(0, 19)
+  }
 
 /** creates the html for messg item */
 const createChatMessgItem = (sender_name, date_time, messg) => {
@@ -36,7 +51,28 @@ const createChatMessgItem = (sender_name, date_time, messg) => {
 
 }
 
-let firstTime = true
+/** Loads Initial chat history */
+const loadInitMessgs = () => {
+    socket.emit('chat-init', 'init', (data) => {
+        console.log("Recvd:", data);
+        if (data || data === false) {
+            if (data['new_user']) {
+                USER_ID = data['new_user']
+            } else {
+                console.error('No ID recvd!')
+            }
+            if(data['old_messages']){
+                data['old_messages'].forEach((messg, index)=> {
+                    createChatMessgItem(messg.user_id, messg.datetime, messg.text)
+                })
+                scrollToBottom(chatbox_messgbox)
+            } else {
+                console.error("no old messges recvd!")
+            }
+        }
+    });
+}
+
 /** chat scroll to bottm */
 /** REF: https://stackoverflow.com/questions/25505778/automatically-scroll-down-chat-div */
 const scrollToBottom = (container) => {
@@ -56,13 +92,25 @@ const scrollToBottom = (container) => {
 
 /** send messg via sockets */
 const sendMessage = () => {
-    let message = typeBox.value
-    console.log("Sent:", message)
+    let message_text = typeBox.value
+
+    /** get date time */
+    let datetime = getUTCDateTime()
+
+    let user = USER_ID
+
+    let message = {
+        user_id: user,
+        datetime: datetime,
+        text: message_text
+    }
+    
+    console.log("Send:", message)
 
     socket.emit('chat', message, (data) => {
         console.log("Recvd:", data);
         if (data || data === false) {
-            createChatMessgItem('Someya Walva', '20/09/2019 15:35', data)
+            createChatMessgItem(data['user_id'], data['datetime'], data['text'])
             scrollToBottom(chatbox_messgbox)
         }
     });
@@ -74,11 +122,14 @@ const sendMessage = () => {
 
 sendButton.onclick = sendMessage
 
+/** load init messgs */
+loadInitMessgs()
+
 /** listen for chats */
 socket.on('chat', (data) => {
     console.log("Recvd:", data)
     if (data || data === false) {
-        createChatMessgItem('Someya Walva', '20/09/2019 15:35', data)
+        createChatMessgItem(data['user_id'], data['datetime'], data['text'])        
         scrollToBottom(chatbox_messgbox)
     }
 })

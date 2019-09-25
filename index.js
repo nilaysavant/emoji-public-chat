@@ -35,6 +35,7 @@ app.use(morgan('dev'))
 
 /** Messages list Global Object*/
 let MESSAGES_LIST = []
+let ID_GEN = 0
 
 /** Custom Variables END -----------------------------------------------------*/
 
@@ -120,11 +121,28 @@ const main = async function () {
   io.on('connection', (socket) => {
     console.log('a user connected');
     socket.on('chat', (messg, send) => {
+      console.log({ Recvd: messg })
       if (messg !== undefined && messg !== null) {
-        console.log({ Recvd: messg })
+        MESSAGES_LIST.push(messg)
         // send(messg)
         /** broadcast to everyone in chat */
         io.emit('chat', messg)
+      } else {
+        console.error("Invalid Messg recvd !")
+      }
+    });
+
+    socket.on('chat-init', (messg, send) => {
+      console.log({ Recvd: messg })
+      if (messg !== undefined && messg !== null && messg === 'init') {
+        /** increment for new user */
+        ID_GEN += 1
+
+        /** send packet */
+        send({
+          new_user: `user${ID_GEN}`,
+          old_messages: MESSAGES_LIST
+        })
       } else {
         console.error("Invalid Messg recvd !")
       }
