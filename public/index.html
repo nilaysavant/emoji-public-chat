@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/png" href="assets/favicon.png">
+    <script src="/socket.io/socket.io.js"></script>
 
     <title>EmojiChat | Express youself!</title>
 </head>
@@ -67,8 +68,8 @@
 
                 </div>
                 <div class="chatbox__typebox">
-                    <input type="text" class="chatbox__input" placeholder="Type Message"></input>
-                    <button class="chatbox__send-btn">Send</button>
+                    <input id="chat-type-box" type="text" class="chatbox__input" placeholder="Type Message"></input>
+                    <button id="chat-send-btn" class="chatbox__send-btn">Send</button>
                 </div>
             </div>
         </div>

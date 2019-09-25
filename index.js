@@ -116,10 +116,9 @@ const main = async function () {
    */
   io.on('connection', (socket) => {
     console.log('a user connected');
-    socket.on('event', (data, send) => {
-      console.log({ data, COUNT })
-      COUNT += 1
-      send(COUNT)
+    socket.on('chat', (messg, send) => {
+      console.log({ Recvd: messg })
+      send(messg)
     });
   });
 
