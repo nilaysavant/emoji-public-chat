@@ -120,11 +120,11 @@ const main = async function () {
       console.log({ Recvd: messg })
       send(messg)
     });
-    let i = 0
-    setInterval(()=> {
-      i += 1
-      socket.emit('chat', 'lorem ipsum tets mesg: '+ i)
-    }, 1000)
+    // let i = 0
+    // setInterval(()=> {
+    //   i += 1
+    //   socket.emit('chat', 'lorem ipsum tets mesg: '+ i)
+    // }, 1000)
   });
 
 
