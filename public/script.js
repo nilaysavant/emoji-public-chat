@@ -39,12 +39,12 @@ const createChatMessgItem = (sender_name, date_time, messg) => {
 let firstTime = true
 /** chat scroll to bottm */
 const scrollToBottom = (container) => {
-    console.table({
-        scrollTop: container.scrollTop,
-        clientHeight: container.clientHeight,
-        sum: container.scrollTop + container.clientHeight,
-        scrollHeight: container.scrollHeight
-    })
+    // console.table({
+    //     scrollTop: container.scrollTop,
+    //     clientHeight: container.clientHeight,
+    //     sum: container.scrollTop + container.clientHeight,
+    //     scrollHeight: container.scrollHeight
+    // })
     if (firstTime) {
         container.scrollTop = container.scrollHeight;
         firstTime = false;
