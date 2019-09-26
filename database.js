@@ -41,22 +41,17 @@ function uuidv4() {
 let db_struct = {
     users: [
         {
-            id: 'ioisaoso',
-            name: 'Nobbk Koilos',
-            created: '2017/02/18 11:40'
-        },
-        {
-            id: 'i45isaoso',
-            name: 'Moki Joki',
-            created: '2017/02/18 11:40'
+            id: 'myid',
+            name: 'Nilay Savant',
+            created: '2050/02/18 11:40'
         },
     ],
     messages: [
         {
             index: 1,
-            id: 'oioioioi',
-            name: 'Noils Honman',
-            timestamp: '2019/03/04 13:54',
+            id: 'myid',
+            name: 'Nilay Savant',
+            timestamp: '2050/03/04 13:54',
             value: 'hello! WOrld!'
         },
     ],
@@ -81,12 +76,12 @@ class database {
      */
     resetDataObj() {
         /** db model */
-        this.data = {
-            users: [],
-            messages: [],
-            config: {}
-        }
-        // this.data = db_struct
+        // this.data = {
+        //     users: [],
+        //     messages: [],
+        //     config: {}
+        // }
+        this.data = db_struct
     }
 
     /**
