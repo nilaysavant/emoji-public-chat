@@ -81,12 +81,12 @@ class database {
      */
     resetDataObj() {
         /** db model */
-        // this.data = {
-        //     users: [],
-        //     messages: [],
-        //     config: {}
-        // }
-        this.data = db_struct
+        this.data = {
+            users: [],
+            messages: [],
+            config: {}
+        }
+        // this.data = db_struct
     }
 
     /**
