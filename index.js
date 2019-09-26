@@ -11,20 +11,10 @@ const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
-const randName = require('random-name')
+const database = require('./database')
 
-/** load env vars */
-require("dotenv").config()
-
-/** get jsonstore.io(DB) link from .env */
-const DB = process.env.DB
-if (DB || DB === false) {
-  /** check if var is valid */
-  /** https://stackoverflow.com/questions/5515310/is-there-a-standard-function-to-check-for-null-undefined-or-blank-variables-in?rq=1 */
-  console.log("DB link read suceess!")
-} else {
-  console.error("DB link invalid! ", DB)
-}
+/** create new database obj */
+let db = new database()
 
 /** Server Port Variable */
 const PORT = process.env.PORT || 3000
@@ -36,7 +26,7 @@ app.use(morgan('dev'))
 
 /** Messages list Global Object*/
 let MESSAGES_LIST = []
-
+let MESSAGE_INDEX = 0
 /** Custom Variables END -----------------------------------------------------*/
 
 /** to parse the body of post requests -> bodyParser : */
@@ -83,24 +73,20 @@ const getUTCDateTime = () => {
   return new Date().toISOString().replace('T', ' ').substr(0, 19)
 }
 
+/** Database functions START--------------------------------------- */
+
 /**
  * Initialise jsonstore DB to init values
  * @param {JSON Object} initDataObj Init value JSON object
  */
 const databaseInit = async (initDataObj) => {
   /** make post req to set jsonstore db to provided init values */
-  await axios.post(DB, initDataObj)
+  await axios.post(DB_URL, initDataObj)
   console.log('DB init complete...')
 }
 
-/** UUDI (unique id genrator) */
-/** ref:https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript */
-function uuidv4() {
-  return 'xxyxxxyxyy'.replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-  });
-}
+/** Database functions ENDs --------------------------------------- */
+
 
 /** CUSTOM FUNCTION END --------------------------------------------------------- */
 
@@ -108,10 +94,12 @@ function uuidv4() {
 /** MAIN FUNCTION STARTS ---------------------------------------------------------- */
 const main = async function () {
 
-  // databaseInit({
-  //   date: getUTCDateTime(),
-  //   count: 0
-  // })
+  /** init database */
+  await db.initDatabase()
+
+  // setInterval(() => {
+  //   db.syncDB()
+  // }, 6000);
 
   /**
    * "/endpt" : POST
@@ -132,7 +120,19 @@ const main = async function () {
     socket.on('chat', (messg, send) => {
       console.log({ Recvd: messg })
       if (messg !== undefined && messg !== null) {
-        MESSAGES_LIST.push(messg)
+        MESSAGE_INDEX += 1
+        // MESSAGES_LIST.push({
+        //   index: MESSAGE_INDEX,
+        //   id: messg.id,
+        //   name: messg.name,
+        //   timestamp: messg.timestamp,
+        //   message: messg.value
+        // })
+
+        db.appendMessages(messg, MESSAGE_INDEX)
+
+        console.log("TCL: db.data", db.data)
+
         // send(messg)
         /** broadcast to everyone in chat */
         io.emit('chat', messg)
@@ -144,14 +144,27 @@ const main = async function () {
     socket.on('chat-init', (messg, send) => {
       console.log({ Recvd: messg })
       if (messg !== undefined && messg !== null && messg === 'init') {
-        /** generate new uuid */
-        let id = uuidv4()
+        // /** generate new uuid */
+        // let id = uuidv4()
+
+        let new_user = db.createUser()
+
+        let old_messages = []
+        db.data.messages.forEach((mes, indx) => {
+        console.log("TCL: mes", mes)
+          old_messages.push({
+            id: mes.id,
+            name: mes.name,
+            timestamp: mes.timestamp,
+            value: mes.value
+          })
+        })
 
         /** send packet */
         send({
-          user_id: id,
-          user_name: `${randName.first()} ${randName.last()}`,
-          old_messages: MESSAGES_LIST
+          user_id: new_user.id,
+          user_name: new_user.name,
+          old_messages: old_messages
         })
       } else {
         console.error("Invalid Messg recvd !")

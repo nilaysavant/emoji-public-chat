@@ -91,7 +91,7 @@ const loadInitMessgs = () => {
             }
             if (data['old_messages']) {
                 data['old_messages'].forEach((messg, index) => {
-                    createChatMessgItem(messg.name, messg.datetime, messg.text)
+                    createChatMessgItem(messg.name, messg.timestamp, messg.value)
                 })
                 scrollToBottom(chatbox_messgbox)
             } else {
@@ -128,10 +128,10 @@ const sendMessage = () => {
     let user = USER_ID
 
     let message = {
-        user_id: user,
+        id: user,
         name: USER_NAME,
-        datetime: datetime,
-        text: message_text
+        timestamp: datetime,
+        value: message_text
     }
 
     console.log("Send:", message)
@@ -163,7 +163,7 @@ const MAIN = () => {
     socket.on('chat', (data) => {
         console.log("Recvd:", data)
         if (data || data === false) {
-            createChatMessgItem(data['name'], data['datetime'], data['text'])
+            createChatMessgItem(data['name'], data['timestamp'], data['value'])
             scrollToBottom(chatbox_messgbox)
         }
     })
