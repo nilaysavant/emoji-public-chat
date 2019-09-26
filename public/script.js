@@ -69,13 +69,23 @@ const loadInitMessgs = () => {
     socket.emit('chat-init', 'init', (data) => {
         console.log("Recvd:", data);
         if (data || data === false) {
-            if (data['new_user']) {
-                USER_ID = data['new_user']
+            if (data['user_id']) {
+                /** if user id is not defined */
+                if(!USER_ID){
+                    USER_ID = data['user_id']
+                    /** save id to local storage */
+                    localStorage.setItem('USER_ID', USER_ID)
+                }
             } else {
                 console.error('No ID recvd!')
             }
-            if(data['name']) {
-                USER_NAME = data['name']
+            if(data['user_name']) {
+                /** if user name is not defined */
+                if(!USER_NAME) {
+                    USER_NAME = data['user_name']
+                    /** save username to local storage */
+                    localStorage.setItem('USER_NAME', USER_NAME)
+                }
             } else {
                 console.error("User Name invalid!")
             }
@@ -138,17 +148,26 @@ const sendMessage = () => {
 /** custom functions end -----------*/
 
 /** main exec */
+const MAIN = () => {
+    /** set event handler for send btn */
+    sendButton.onclick = sendMessage
 
-sendButton.onclick = sendMessage
+    /** get user details from local store */
+    USER_ID = localStorage.getItem('USER_ID')
+    USER_NAME = localStorage.getItem('USER_NAME')
+    
+    /** load init messgs */
+    loadInitMessgs()
+    
+    /** listen for chats */
+    socket.on('chat', (data) => {
+        console.log("Recvd:", data)
+        if (data || data === false) {
+            createChatMessgItem(data['name'], data['datetime'], data['text'])
+            scrollToBottom(chatbox_messgbox)
+        }
+    })
+}
 
-/** load init messgs */
-loadInitMessgs()
-
-/** listen for chats */
-socket.on('chat', (data) => {
-    console.log("Recvd:", data)
-    if (data || data === false) {
-        createChatMessgItem(data['name'], data['datetime'], data['text'])
-        scrollToBottom(chatbox_messgbox)
-    }
-})
+/** RUN MAIN ---------------------------------------------------------------- */
+MAIN()

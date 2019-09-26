@@ -36,7 +36,6 @@ app.use(morgan('dev'))
 
 /** Messages list Global Object*/
 let MESSAGES_LIST = []
-let ID_GEN = 0
 
 /** Custom Variables END -----------------------------------------------------*/
 
@@ -97,7 +96,7 @@ const databaseInit = async (initDataObj) => {
 /** UUDI (unique id genrator) */
 /** ref:https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript */
 function uuidv4() {
-  return 'xxy-xyx'.replace(/[xy]/g, function (c) {
+  return 'xxyxxxyxyy'.replace(/[xy]/g, function (c) {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
   });
@@ -145,15 +144,13 @@ const main = async function () {
     socket.on('chat-init', (messg, send) => {
       console.log({ Recvd: messg })
       if (messg !== undefined && messg !== null && messg === 'init') {
-        /** increment for new user */
-        ID_GEN += 1
-
+        /** generate new uuid */
         let id = uuidv4()
 
         /** send packet */
         send({
-          new_user: `user${id}`,
-          name: `${randName.first()} ${randName.last()}`,
+          user_id: id,
+          user_name: `${randName.first()} ${randName.last()}`,
           old_messages: MESSAGES_LIST
         })
       } else {
