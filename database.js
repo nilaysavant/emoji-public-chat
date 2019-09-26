@@ -153,7 +153,7 @@ class database {
      * Push data to DB
      */
     async pushData() {
-        console.log("TCL: database -> pushData -> this.data", this.data)
+        // console.log("TCL: database -> pushData -> this.data", this.data)
         let status = await axios.post(DB_URL, this.data)
         if (status) {
             return true
@@ -176,7 +176,7 @@ class database {
         /** created timestamp(UTC) */
         let timestamp = getUTCDateTime()
 
-        console.log('new id:', id)
+        // console.log('new id:', id)
 
         let user = {
             id: id,
@@ -186,7 +186,7 @@ class database {
 
         /** Push to the users list in data */
         this.data.users.push(user)
-        console.log("TCL: database -> createUser -> this.data", this.data)
+        // console.log("TCL: database -> createUser -> this.data", this.data)
 
         return user
     }
@@ -222,7 +222,7 @@ class database {
             let length = this.data.messages.length
             // 20 - 1 - 1 = 18 
             let spliced = this.data.messages.splice(length - index_from_latest - delete_count, delete_count)
-            console.log("TCL: database -> deleteMessages -> spliced", spliced)
+            // console.log("TCL: database -> deleteMessages -> spliced", spliced)
 
         } else {
             console.error("Invalid index/count")

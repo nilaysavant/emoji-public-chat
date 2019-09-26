@@ -108,7 +108,7 @@ const main = async function () {
    * echoes the req body
    */
   app.post('/endpt', (req, res) => {
-    console.log("TCL: req", req.body)
+    // console.log("TCL: req", req.body)
     res.json({ sent: req.body })
   })
 
@@ -118,7 +118,7 @@ const main = async function () {
   io.on('connection', (socket) => {
     console.log('a user connected');
     socket.on('chat', (messg, send) => {
-      console.log({ Recvd: messg })
+      // console.log({ Recvd: messg })
       if (messg !== undefined && messg !== null) {
         MESSAGE_INDEX += 1
         // MESSAGES_LIST.push({
@@ -131,7 +131,7 @@ const main = async function () {
 
         db.appendMessages(messg, MESSAGE_INDEX)
 
-        console.log("TCL: db.data", db.data)
+        // console.log("TCL: db.data", db.data)
 
         // send(messg)
         /** broadcast to everyone in chat */
@@ -142,7 +142,7 @@ const main = async function () {
     });
 
     socket.on('chat-init', (messg, send) => {
-      console.log({ Recvd: messg })
+      // console.log({ Recvd: messg })
       if (messg !== undefined && messg !== null && messg === 'init') {
         // /** generate new uuid */
         // let id = uuidv4()
@@ -151,7 +151,7 @@ const main = async function () {
 
         let old_messages = []
         db.data.messages.forEach((mes, indx) => {
-        console.log("TCL: mes", mes)
+          // console.log("TCL: mes", mes)
           old_messages.push({
             id: mes.id,
             name: mes.name,
@@ -160,10 +160,31 @@ const main = async function () {
           })
         })
 
+        console.log('db.data.users', db.data.users)
+
         /** send packet */
         send({
           user_id: new_user.id,
           user_name: new_user.name,
+          old_messages: old_messages
+        })
+      } else if (messg !== undefined && messg !== null && messg === 'init_existing_user') {
+
+        let old_messages = []
+        db.data.messages.forEach((mes, indx) => {
+          // console.log("TCL: mes", mes)
+          old_messages.push({
+            id: mes.id,
+            name: mes.name,
+            timestamp: mes.timestamp,
+            value: mes.value
+          })
+        })
+
+        console.log('db.data.users', db.data.users)
+
+        /** send packet */
+        send({
           old_messages: old_messages
         })
       } else {
