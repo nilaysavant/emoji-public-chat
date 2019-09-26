@@ -95,10 +95,12 @@ const databaseInit = async (initDataObj) => {
 const main = async function () {
 
   /** init database */
-  await db.initDatabase()
+  // await db.initDatabase()
 
+  await db.syncDB()
   // setInterval(() => {
   //   db.syncDB()
+  //   console.log('sycing db -----')
   // }, 6000);
 
   /**

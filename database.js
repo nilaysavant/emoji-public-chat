@@ -109,10 +109,12 @@ class database {
      * Get data from DB
      */
     async getData() {
-        let temp_db = await axios.get(DB_URL)
+        let resp = await axios.get(DB_URL)
+        let temp_db = resp.data.result
         /** check if db contains data already */
         if (temp_db) {
-            if (Object.keys(temp_db) > 0) {
+            console.log("TCL: database -> getData -> temp_db", Object.keys(temp_db))
+            if (Object.keys(temp_db).length > 0) {
                 let old_users = temp_db.users
                 let old_messages = temp_db.messages
                 let old_config = temp_db.config
@@ -120,7 +122,7 @@ class database {
                 if (old_users) {
                     old_users.forEach((old_user) => {
                         let index = this.data.users.findIndex((user) => {
-                            return user === old_user
+                            return user.id === old_user.id
                         })
                         /** for new user ie. no existing index */
                         if (index === -1) {
@@ -132,7 +134,7 @@ class database {
                 if (old_messages) {
                     old_messages.forEach((old_messg) => {
                         let index = this.data.messages.findIndex((messg) => {
-                            return messg.number === old_messg.number
+                            return messg.index === old_messg.index
                         })
                         /** for new user ie. no existing index */
                         if (index === -1) {
