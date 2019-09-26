@@ -97,11 +97,12 @@ const main = async function () {
   /** init database */
   // await db.initDatabase()
 
+  /** sync with db at regular intervals */
   await db.syncDB()
-  // setInterval(() => {
-  //   db.syncDB()
-  //   console.log('sycing db -----')
-  // }, 6000);
+  setInterval(() => {
+    db.syncDB()
+    console.log('sycing db -----')
+  }, 6000);
 
   /**
    * "/endpt" : POST
@@ -131,7 +132,7 @@ const main = async function () {
         //   message: messg.value
         // })
 
-        db.appendMessages(messg, MESSAGE_INDEX)
+        db.appendMessages(messg)
 
         // console.log("TCL: db.data", db.data)
 

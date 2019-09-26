@@ -196,12 +196,12 @@ class database {
     /**
      * Append messages to db
      */
-    appendMessages(messg, messg_index) {
+    appendMessages(messg) {
 
-        if (messg && (messg_index || messg_index === 0)) {
+        if (messg) {
             /** push message to data message list */
             this.data.messages.push({
-                index: messg_index,
+                index: this.data.messages[this.data.messages.length - 1].index + 1,
                 id: messg.id,
                 name: messg.name,
                 timestamp: messg.timestamp,
