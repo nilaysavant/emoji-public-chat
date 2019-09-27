@@ -178,7 +178,9 @@ const scrollToBottom = (container) => {
 /** send messg via sockets */
 const sendMessage = () => {
     let message_text = typeBox.value
-
+    /** clear input type box */
+    typeBox.value = ""
+    
     /** get date time */
     let datetime = getUTCDateTime()
 
