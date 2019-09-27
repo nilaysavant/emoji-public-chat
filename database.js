@@ -48,11 +48,11 @@ let db_struct = {
     ],
     messages: [
         {
-            index: 1,
+            index: 0,
             id: 'myid',
             name: 'Nilay Savant',
             timestamp: '2050/03/04 13:54',
-            value: 'hello! WOrld!'
+            value: "Hello? Anybody here? Anyways 😬️, welcome to my chat app! 🤗️ Be kind and have fun! 😜️"
         },
     ],
     stats: {
@@ -64,6 +64,7 @@ let db_struct = {
         message_backup_interval: 30
     }
 }
+// console.log(JSON.stringify(db_struct))
 
 /**
  * Database Class: contains all api to work with db
