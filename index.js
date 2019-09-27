@@ -142,7 +142,26 @@ const main = async function () {
               if(value.startsWith(TAG)){
                 let comm = value.split('!')[1]
                 console.log('----- proces COMM ------:', comm)
+                /** process comm */
+                if (comm) {
+                  let command = comm.split(',')[0]
+                  let param = comm.split(',')[1]
 
+                  /** check if command is delete and param is valid number*/
+                  if(command === 'delete' && !isNaN(param)){
+                    let count = parseInt(param)
+                    if(Number.isInteger(count)){
+                      db.deleteMessages(0, count)
+                      console.log("delete sucesss", count)
+                    }else {
+                      console.error("count not integer!")
+                    }
+                  } else {
+                    console.error("command invalid/not found!")
+                  }
+                } else {
+                  console.error("invalid comm")
+                }
               } else {
                 /** append message to db */
                 db.appendMessages(messg)
