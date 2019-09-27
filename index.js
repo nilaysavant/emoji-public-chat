@@ -122,23 +122,38 @@ const main = async function () {
     console.log('a user connected');
     socket.on('chat', (messg, send) => {
       // console.log({ Recvd: messg })
-      if (messg !== undefined && messg !== null) {
-        MESSAGE_INDEX += 1
-        // MESSAGES_LIST.push({
-        //   index: MESSAGE_INDEX,
-        //   id: messg.id,
-        //   name: messg.name,
-        //   timestamp: messg.timestamp,
-        //   message: messg.value
-        // })
+      if (messg && Object.keys(messg).length > 0) {
 
-        db.appendMessages(messg)
+        let id = messg.id
+        let name = messg.name
+        let timestamp = messg.timestamp
+        let value = messg.value
+        let stats = db.data.stats
 
-        // console.log("TCL: db.data", db.data)
+        if (id || id === 0) {
+          /** check if user exists */
+          if (db.userExists(id)) {
+            if ((name || name === false) && timestamp && (value || value === false)) {
+              /** append message to db */
+              db.appendMessages(messg)
+              // send(messg)
+              /** broadcast to everyone in chat */
+              io.emit('chat', {
+                name: messg.name,
+                timestamp: messg.timestamp,
+                value: messg.value,
+                stats: db.data.stats
+              })
+            } else {
+              console.error("received message is invalid!")
+            }
+          } else {
 
-        // send(messg)
-        /** broadcast to everyone in chat */
-        io.emit('chat', messg)
+          }
+        } else {
+          console.error("id is invalid!")
+        }
+
       } else {
         console.error("Invalid Messg recvd !")
       }
@@ -146,50 +161,83 @@ const main = async function () {
 
     socket.on('chat-init', (messg, send) => {
       // console.log({ Recvd: messg })
-      if (messg !== undefined && messg !== null && messg === 'init') {
-        // /** generate new uuid */
-        // let id = uuidv4()
+      if (messg || messg === false) {
+        /** if new user (messg === init) */
+        if (messg === 'init') {
+          /** gen new user */
+          let new_user = db.createUser()
 
-        let new_user = db.createUser()
-
-        let old_messages = []
-        db.data.messages.forEach((mes, indx) => {
-          // console.log("TCL: mes", mes)
-          old_messages.push({
-            id: mes.id,
-            name: mes.name,
-            timestamp: mes.timestamp,
-            value: mes.value
+          let old_messages = []
+          db.data.messages.forEach((mes, indx) => {
+            // console.log("TCL: mes", mes)
+            old_messages.push({
+              id: mes.id,
+              name: mes.name,
+              timestamp: mes.timestamp,
+              value: mes.value
+            })
           })
-        })
 
-        console.log('db.data.users', db.data.users)
+          console.log('db.data.users', db.data.users)
 
-        /** send packet */
-        send({
-          user_id: new_user.id,
-          user_name: new_user.name,
-          old_messages: old_messages
-        })
-      } else if (messg !== undefined && messg !== null && messg === 'init_existing_user') {
-
-        let old_messages = []
-        db.data.messages.forEach((mes, indx) => {
-          // console.log("TCL: mes", mes)
-          old_messages.push({
-            id: mes.id,
-            name: mes.name,
-            timestamp: mes.timestamp,
-            value: mes.value
+          /** send packet */
+          send({
+            user_id: new_user.id,
+            user_name: new_user.name,
+            old_messages: old_messages,
+            stats: db.data.stats,
           })
-        })
+        } else { /** if messg !== 'init' */
 
-        console.log('db.data.users', db.data.users)
+          /** check if user exists */
+          let user_id = messg /** for exitsing users: user id is sent as messg */
+          /** check if user exists */
+          if (db.userExists(user_id)) {
+            let old_messages = []
+            db.data.messages.forEach((mes, indx) => {
+              // console.log("TCL: mes", mes)
+              old_messages.push({
+                id: mes.id,
+                name: mes.name,
+                timestamp: mes.timestamp,
+                value: mes.value
+              })
+            })
 
-        /** send packet */
-        send({
-          old_messages: old_messages
-        })
+            console.log('db.data.users', db.data.users)
+
+            /** send packet */
+            send({
+              old_messages: old_messages,
+              stats: db.data.stats,
+            })
+          } else { /** user does not exist, so create new user */
+            console.error("user does not exist, creating new")
+            /** gen new user */
+            let new_user = db.createUser()
+
+            let old_messages = []
+            db.data.messages.forEach((mes, indx) => {
+              // console.log("TCL: mes", mes)
+              old_messages.push({
+                id: mes.id,
+                name: mes.name,
+                timestamp: mes.timestamp,
+                value: mes.value
+              })
+            })
+
+            console.log('db.data.users', db.data.users)
+
+            /** send packet */
+            send({
+              user_id: new_user.id,
+              user_name: new_user.name,
+              old_messages: old_messages,
+              stats: db.data.stats,
+            })
+          }
+        }
       } else {
         console.error("Invalid Messg recvd !")
       }

@@ -55,6 +55,10 @@ let db_struct = {
             value: 'hello! WOrld!'
         },
     ],
+    stats: {
+        number_of_messages: 1,
+        number_of_users: 1,
+    },
     config: {
         max_messages: 2000,
         message_backup_interval: 30
@@ -137,6 +141,10 @@ class database {
                         }
                     })
                 }
+
+                /** set number of users and messages */
+                this.data.stats.number_of_messages = this.data.messages.length
+                this.data.stats.number_of_users = this.data.users.length
             }
             return true
         } else {
@@ -242,6 +250,22 @@ class database {
             console.error("Could not getData from db")
         }
         return false
+    }
+
+    /**
+     * Check if user (user id) exists
+     */
+    userExists(id) {
+        /** find index of user with that id */
+        let index = this.data.users.findIndex((user) => {
+            return user.id === id
+        })
+        /** check if index is valid */
+        if (index > -1){
+            return true
+        } else {
+            return false
+        }
     }
 
 }

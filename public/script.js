@@ -1,6 +1,10 @@
 const socket = io();
 
 /** get dom objects */
+
+let number_of_messages = document.getElementById("message_number_label")
+let number_of_users = document.getElementById("user_number_label")
+
 let sendButton = document.getElementById("chat-send-btn")
 let typeBox = document.getElementById("chat-type-box")
 
@@ -67,16 +71,43 @@ typeBox.addEventListener("keyup", function (event) {
 /** Loads Initial chat history */
 const loadInitMessgs = () => {
     if (USER_ID) {
-        socket.emit('chat-init', 'init_existing_user', (data) => {
+        socket.emit('chat-init', USER_ID, (data) => {
             console.log("Recvd:", data);
+            if (data || data === false) {
+                if (data['user_id']) {
+                    /** assign the new user id (if)provided */
+                    USER_ID = data['user_id']
+                    /** save id to local storage */
+                    localStorage.setItem('USER_ID', USER_ID)
+                } else {
+                    console.error('No ID recvd!')
+                }
+                if (data['user_name']) {
+                    /** assign new user name if provided */
+                    USER_NAME = data['user_name']
+                    /** save username to local storage */
+                    localStorage.setItem('USER_NAME', USER_NAME)
+                } else {
+                    console.error("No user name recvd")
+                }
+                if (data['old_messages']) {
+                    data['old_messages'].forEach((messg, index) => {
+                        createChatMessgItem(messg.name, messg.timestamp, messg.value)
+                    })
+                    scrollToBottom(chatbox_messgbox)
+                } else {
+                    console.error("no old messges recvd!")
+                }
 
-            if (data['old_messages']) {
-                data['old_messages'].forEach((messg, index) => {
-                    createChatMessgItem(messg.name, messg.timestamp, messg.value)
-                })
-                scrollToBottom(chatbox_messgbox)
-            } else {
-                console.error("no old messges recvd!")
+                let stats = data['stats']
+                if (stats && Object.keys(stats).length > 0) {
+                    number_of_messages.innerText = stats.number_of_messages
+                    number_of_users.innerText = stats.number_of_users
+                } else {
+                    console.error("stats invalid!")
+                    number_of_messages.innerText = ""
+                    number_of_users.innerText = ""
+                }
             }
 
         });
@@ -111,6 +142,16 @@ const loadInitMessgs = () => {
                     scrollToBottom(chatbox_messgbox)
                 } else {
                     console.error("no old messges recvd!")
+                }
+
+                let stats = data['stats']
+                if (stats && Object.keys(stats).length > 0) {
+                    number_of_messages.innerText = stats.number_of_messages
+                    number_of_users.innerText = stats.number_of_users
+                } else {
+                    console.error("stats invalid!")
+                    number_of_messages.innerText = ""
+                    number_of_users.innerText = ""
                 }
             }
         });
@@ -155,7 +196,7 @@ const sendMessage = () => {
     socket.emit('chat', message, (data) => {
         console.log("Recvd:", data);
         if (data || data === false) {
-            createChatMessgItem(data['name'], data['datetime'], data['text'])
+            createChatMessgItem(data['name'], data['timestamp'], data['value'])
             scrollToBottom(chatbox_messgbox)
         }
     });
