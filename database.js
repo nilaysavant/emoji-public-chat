@@ -120,7 +120,7 @@ class database {
                 let old_config = temp_db.config
 
                 if (old_users) {
-                    old_users.forEach((old_user) => {
+                    old_users.slice().reverse().forEach((old_user) => {
                         let index = this.data.users.findIndex((user) => {
                             return user.id === old_user.id
                         })
@@ -132,7 +132,7 @@ class database {
                 }
 
                 if (old_messages) {
-                    old_messages.forEach((old_messg) => {
+                    old_messages.slice().reverse().forEach((old_messg) => {
                         let index = this.data.messages.findIndex((messg) => {
                             return messg.index === old_messg.index
                         })
