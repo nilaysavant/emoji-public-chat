@@ -19,6 +19,9 @@ let db = new database()
 /** Server Port Variable */
 const PORT = process.env.PORT || 3000
 
+/** tag variable */
+const TAG = process.env.TAG
+
 /** a logger for express */
 app.use(morgan('dev'))
 
@@ -134,16 +137,24 @@ const main = async function () {
           /** check if user exists */
           if (db.userExists(id)) {
             if ((name || name === false) && timestamp && (value || value === false)) {
-              /** append message to db */
-              db.appendMessages(messg)
-              // send(messg)
-              /** broadcast to everyone in chat */
-              io.emit('chat', {
-                name: messg.name,
-                timestamp: messg.timestamp,
-                value: messg.value,
-                stats: db.data.stats
-              })
+
+              /** check for tag */
+              if(value.startsWith(TAG)){
+                let comm = value.split('!')[1]
+                console.log('----- proces COMM ------:', comm)
+
+              } else {
+                /** append message to db */
+                db.appendMessages(messg)
+                // send(messg)
+                /** broadcast to everyone in chat */
+                io.emit('chat', {
+                  name: messg.name,
+                  timestamp: messg.timestamp,
+                  value: messg.value,
+                  stats: db.data.stats
+                })
+              }
             } else {
               console.error("received message is invalid!")
             }
