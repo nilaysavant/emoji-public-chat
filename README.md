@@ -7,5 +7,5 @@
 - ### `NodeJS + ExpressJS` 
 - ### `Socket.io`
 
-<img src=".readme_res/mobile-view.png" alt="drawing" width="262"/>
-<img src=".readme_res/desktop-view.png" alt="drawing" width="590"/>
+<img src=".readme_res/mobile-view.png" alt="drawing" width="240"/>
+<img src=".readme_res/desktop-view.png" alt="drawing" width="541"/>
