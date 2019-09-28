@@ -124,7 +124,6 @@ class database {
         let temp_db = resp.data.result
         /** check if db contains data already */
         if (temp_db) {
-            console.log("TCL: database -> getData -> temp_db", Object.keys(temp_db))
             if (Object.keys(temp_db).length > 0) {
                 let old_users = temp_db.users
                 let old_messages = temp_db.messages
@@ -239,7 +238,7 @@ class database {
             // 20 - 1 - 1 = 18 
             let spliced = this.data.messages.splice(length - index_from_latest - delete_count, delete_count)
             // console.log("TCL: database -> deleteMessages -> spliced", spliced)
-            console.log("delete sucesss", spliced)
+            console.log("delete sucesss")
 
         } else {
             console.error("Invalid index/count")

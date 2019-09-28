@@ -222,7 +222,7 @@ const main = async function () {
             })
           })
 
-          console.log('db.data.users', db.data.users)
+          // console.log('db.data.users', db.data.users)
 
           /** send packet */
           send({
@@ -251,7 +251,7 @@ const main = async function () {
               })
             })
 
-            console.log('db.data.users', db.data.users)
+            // console.log('db.data.users', db.data.users)
 
             /** send packet */
             send({
@@ -276,7 +276,7 @@ const main = async function () {
               })
             })
 
-            console.log('db.data.users', db.data.users)
+            // console.log('db.data.users', db.data.users)
 
             /** send packet */
             send({
