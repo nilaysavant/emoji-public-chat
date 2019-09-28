@@ -28,7 +28,7 @@ app.use(morgan('dev'))
 /** Custom Variables START -----------------------------------------------------*/
 
 /** DB sync interval */
-const DB_SYNC_INTERVAL = 6000 /** In MS */
+const DB_SYNC_INTERVAL = 15000 /** In MS */
 /** to reset and init DB */
 const INIT_DB = false
 
