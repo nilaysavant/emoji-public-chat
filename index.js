@@ -139,7 +139,7 @@ const main = async function () {
       timestamp: getUTCDateTime(),
       value: 'Backing up messages... please standby',
     })
-    
+
     db.syncDB()
     console.log('sycing db -----')
   }, DB_SYNC_INTERVAL);
@@ -171,7 +171,7 @@ const main = async function () {
 
         /** strip messg value to only emojis after storing it in value */
         messg.value = getEmojiString(messg.value)
-        
+
         let stats = db.data.stats
 
         if (id || id === 0) {
@@ -202,9 +202,29 @@ const main = async function () {
                     } else {
                       console.error("count/index not integer!")
                     }
-                  } if (command === 'namechange' && param1) {
+                  } else if (command === 'namechange' && param1) {
                     let new_name = param1
                     db.setUserName(id, new_name)
+                  } else if (command === 'adm' && param1) {
+                    /** command for admin text messgs */
+                    let text_messg = param1
+                    /** set value of messg obj toext_messg */
+                    messg.value = text_messg
+                    if (messg.value) {
+                      /** append message to db */
+                      db.appendMessages(messg)
+                      // send(messg)
+                      /** broadcast to everyone in chat */
+                      io.emit('chat', {
+                        name: messg.name,
+                        timestamp: messg.timestamp,
+                        value: messg.value,
+                        stats: db.data.stats
+                      })
+                    } else {
+                      console.error("Messg contains no emoji, not sending")
+                    }
+
                   } else {
                     console.error("command invalid/not found!")
                   }
@@ -212,7 +232,7 @@ const main = async function () {
                   console.error("invalid comm")
                 }
               } else {
-                if(messg.value) {
+                if (messg.value) {
                   /** append message to db */
                   db.appendMessages(messg)
                   // send(messg)
