@@ -19,6 +19,9 @@ let db = new database()
 /** Server Port Variable */
 const PORT = process.env.PORT || 3000
 
+/** enable/disable server */
+const ENABLE_SERVER = true
+
 /** tag variable */
 const TAG = process.env.TAG
 
@@ -313,4 +316,8 @@ const main = async function () {
 
 
 /** MAIN EXECUTION (Do not remove!) ----------------------------------------------- */
-main()
+if(ENABLE_SERVER){
+  main()
+} else {
+  console.error("ENABLE_SERVER is FALSE, exiting...")
+}
