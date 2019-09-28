@@ -320,4 +320,5 @@ if(ENABLE_SERVER){
   main()
 } else {
   console.error("ENABLE_SERVER is FALSE, exiting...")
+  process.exit(1)
 }
