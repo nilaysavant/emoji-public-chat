@@ -1,3 +1,9 @@
+/**
+ * Emoji chat v1.2
+ * 
+ */
+
+
 const axios = require("axios")
 const randName = require('random-name')
 

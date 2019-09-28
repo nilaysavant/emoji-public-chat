@@ -1,5 +1,5 @@
 /**
- * Socket.IO test code
+ * Emoji chat v1.2
  * 
  */
 
