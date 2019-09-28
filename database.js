@@ -82,8 +82,22 @@ let db_struct = {
  */
 class database {
     constructor() {
-        this.data = {}
-        this.resetDataObj()
+        this.data = {
+            users: [
+                {
+                    id: ADMIN_ID,
+                    name: 'Nilay Savant',
+                    created: '2050/02/18 11:40'
+                },
+            ],
+            messages: [],
+            stats: {},
+            config: {
+                max_messages: 2000,
+                message_backup_interval: 30
+            }
+        }
+        // this.resetDataObj()
     }
 
     /**
