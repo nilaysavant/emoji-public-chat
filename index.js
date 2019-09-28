@@ -133,6 +133,13 @@ const main = async function () {
   /** sync with db at regular intervals */
   await db.syncDB()
   setInterval(() => {
+    /** notify users of sync */
+    io.emit('chat', {
+      name: 'Backup Bot 🤖️',
+      timestamp: getUTCDateTime(),
+      value: 'Backing up messages... please standby',
+    })
+    
     db.syncDB()
     console.log('sycing db -----')
   }, DB_SYNC_INTERVAL);
