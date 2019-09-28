@@ -159,19 +159,22 @@ const main = async function () {
                 console.log('----- proces COMM ------:', comm)
                 /** process comm */
                 if (comm) {
-                  let command = comm.split(',')[0]
-                  let param = comm.split(',')[1]
+                  let split_comm = comm.split(',')
+                  let command = split_comm[0]
+                  let param1 = split_comm[1]
+                  let param2 = split_comm[2]
 
-                  /** check if command is delete and param is valid number*/
-                  if (command === 'delete' && !isNaN(param)) {
-                    let count = parseInt(param)
-                    if (Number.isInteger(count)) {
-                      db.deleteMessages(0, count)
+                  /** check if command is delete and param1 is valid number*/
+                  if (command === 'delete' && !isNaN(param1) && !isNaN(param2)) {
+                    let index_from_latest = parseInt(param1)
+                    let count = parseInt(param2)
+                    if (Number.isInteger(index_from_latest) && Number.isInteger(count)) {
+                      db.deleteMessages(index_from_latest, count)
                     } else {
-                      console.error("count not integer!")
+                      console.error("count/index not integer!")
                     }
-                  } if (command === 'namechange' && param) {
-                    let new_name = param
+                  } if (command === 'namechange' && param1) {
+                    let new_name = param1
                     db.setUserName(id, new_name)
                   } else {
                     console.error("command invalid/not found!")

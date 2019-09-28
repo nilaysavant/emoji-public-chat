@@ -98,6 +98,11 @@ class database {
             }
         }
         // this.resetDataObj()
+
+        /** delete messg index list (to delete messgs with these index values) */
+        this.delete_messg_index_list = []
+        /** delete the listed users with user ids */
+        this.delete_user_id_list = []
     }
 
     /**
@@ -143,29 +148,57 @@ class database {
                 let old_messages = temp_db.messages
                 let old_config = temp_db.config
 
+                /** create a copy of new data */
+                let new_users = this.data.users
+                let new_messgs = this.data.messages
+                let new_config = this.data.config
+
                 if (old_users) {
                     old_users.slice().reverse().forEach((old_user) => {
-                        let index = this.data.users.findIndex((user) => {
-                            return user.id === old_user.id
+                        /** check if user is deleted */
+                        let deleted = this.delete_user_id_list.findIndex((del_id) => {
+                            return del_id === old_user.id
                         })
-                        /** for new user ie. no existing index */
-                        if (index === -1) {
-                            this.data.users.unshift(old_user)
+                        /** if not found deleted */
+                        if (deleted === -1) {
+                            let index = new_users.findIndex((user) => {
+                                return user.id === old_user.id
+                            })
+                            /** for new user ie. no existing index */
+                            if (index === -1) {
+                                new_users.unshift(old_user)
+                            }
                         }
                     })
+                    /** reset delete user list */
+                    this.delete_user_id_list = []
                 }
 
                 if (old_messages) {
                     old_messages.slice().reverse().forEach((old_messg) => {
-                        let index = this.data.messages.findIndex((messg) => {
-                            return messg.index === old_messg.index
+                        /** check if user is deleted */
+                        let deleted = this.delete_messg_index_list.findIndex((del_indx) => {
+                            return del_indx === old_messg.index
                         })
-                        /** for new user ie. no existing index */
-                        if (index === -1) {
-                            this.data.messages.unshift(old_messg)
+                        /** if not found deleted */
+                        if (deleted === -1) {
+                            let index = new_messgs.findIndex((messg) => {
+                                return messg.index === old_messg.index
+                            })
+                            /** for new user ie. no existing index */
+                            if (index === -1) {
+                                new_messgs.unshift(old_messg)
+                            }
                         }
                     })
+                    /** reset delete messg index list */
+                    this.delete_messg_index_list = []
                 }
+
+                /** assign new data to existing data */
+                this.data.users = new_users
+                this.data.messages = new_messgs
+                this.data.config = new_config
 
                 /** set number of users and messages */
                 this.data.stats.number_of_messages = this.data.messages.length
@@ -246,12 +279,26 @@ class database {
      * @param {*} index_from_latest default 0 for latest message, 1 for previous 
      * @param {*} delete_count number of mesages upwards from index(included) to delete
      */
-    deleteMessages(index_from_latest = 0, delete_count = 1) {
+    async deleteMessages(index_from_latest = 0, delete_count = 1) {
         if ((index_from_latest || index_from_latest === 0) && delete_count) {
             let length = this.data.messages.length
             // 20 - 1 - 1 = 18 
-            let spliced = this.data.messages.splice(length - index_from_latest - delete_count, delete_count)
-            // console.log("TCL: database -> deleteMessages -> spliced", spliced)
+            
+            /** get start index and end index for loop */
+            let start_index = length - 1 - index_from_latest
+            let end_index = start_index + delete_count
+            let to_be_deleted = this.data.messages.slice(start_index, end_index)
+            /** push the deleted messg index to the delete list */
+            to_be_deleted.forEach((messg) => {
+                this.delete_messg_index_list.push(messg.index)
+            })
+
+            /** delete from list */
+            let spliced = this.data.messages.splice(start_index, delete_count)
+            
+            /** sync with database */
+            await this.syncDB()
+
             console.log("delete sucesss")
 
         } else {
