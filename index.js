@@ -27,6 +27,11 @@ app.use(morgan('dev'))
 
 /** Custom Variables START -----------------------------------------------------*/
 
+/** DB sync interval */
+const DB_SYNC_INTERVAL = 6000 /** In MS */
+/** to reset and init DB */
+const INIT_DB = false 
+
 /** Messages list Global Object*/
 let MESSAGES_LIST = []
 let MESSAGE_INDEX = 0
@@ -98,14 +103,18 @@ const databaseInit = async (initDataObj) => {
 const main = async function () {
 
   /** init database */
-  // await db.initDatabase()
+  if(INIT_DB) {
+    console.log("Init DB...(RESET)")
+    await db.initDatabase()
+  }
+
 
   /** sync with db at regular intervals */
   await db.syncDB()
   setInterval(() => {
     db.syncDB()
     console.log('sycing db -----')
-  }, 6000);
+  }, DB_SYNC_INTERVAL);
 
   /**
    * "/endpt" : POST
@@ -128,7 +137,7 @@ const main = async function () {
       if (messg && Object.keys(messg).length > 0) {
 
         let id = messg.id
-        let name = messg.name
+        let name = null
         let timestamp = messg.timestamp
         let value = messg.value
         let stats = db.data.stats
@@ -136,10 +145,13 @@ const main = async function () {
         if (id || id === 0) {
           /** check if user exists */
           if (db.userExists(id)) {
+            /** get username for provided id */
+            name = db.getUserName(id)
+            
             if ((name || name === false) && timestamp && (value || value === false)) {
 
               /** check for tag */
-              if(value.startsWith(TAG)){
+              if (value.startsWith(TAG)) {
                 let comm = value.split('!')[1]
                 console.log('----- proces COMM ------:', comm)
                 /** process comm */
@@ -148,12 +160,12 @@ const main = async function () {
                   let param = comm.split(',')[1]
 
                   /** check if command is delete and param is valid number*/
-                  if(command === 'delete' && !isNaN(param)){
+                  if (command === 'delete' && !isNaN(param)) {
                     let count = parseInt(param)
-                    if(Number.isInteger(count)){
+                    if (Number.isInteger(count)) {
                       db.deleteMessages(0, count)
                       console.log("delete sucesss", count)
-                    }else {
+                    } else {
                       console.error("count not integer!")
                     }
                   } else {
@@ -223,6 +235,9 @@ const main = async function () {
           let user_id = messg /** for exitsing users: user id is sent as messg */
           /** check if user exists */
           if (db.userExists(user_id)) {
+            /** get user name for corresponding id from db */
+            let user_name = db.getUserName(user_id)
+
             let old_messages = []
             db.data.messages.forEach((mes, indx) => {
               // console.log("TCL: mes", mes)
@@ -238,6 +253,8 @@ const main = async function () {
 
             /** send packet */
             send({
+              user_id: user_id,
+              user_name: user_name,
               old_messages: old_messages,
               stats: db.data.stats,
             })

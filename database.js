@@ -13,6 +13,17 @@ if (DB_URL) {
     console.log("DB link read suceess!")
 } else {
     console.error("DB link invalid! ")
+    /** exit app server */
+    process.exit(1)
+}
+
+const ADMIN_ID = process.env.ADMIN_ID
+if(ADMIN_ID) {
+    console.log("Admin ID initialised")
+} else {
+    console.error("admin id not initialised!")
+    /** exit app server */
+    process.exit(1)
 }
 
 /** dependency functions start -----------------*/
@@ -41,7 +52,7 @@ function uuidv4() {
 let db_struct = {
     users: [
         {
-            id: 'myid',
+            id: ADMIN_ID,
             name: 'Nilay Savant',
             created: '2050/02/18 11:40'
         },
@@ -49,7 +60,7 @@ let db_struct = {
     messages: [
         {
             index: 0,
-            id: 'myid',
+            id: ADMIN_ID,
             name: 'Nilay Savant',
             timestamp: '2050/03/04 13:54',
             value: "Hello? Anybody here? Anyways 😬️, welcome to my chat app! 🤗️ Be kind and have fun! 😜️"
@@ -268,6 +279,25 @@ class database {
             return false
         }
     }
+
+     /**
+     * get user name for provided user id
+     * @param id provide userid
+     */
+    getUserName(id) {
+        /** find index of user with that id */
+        let index = this.data.users.findIndex((user) => {
+            return user.id === id
+        })
+        /** check if index is valid */
+        if (index > -1){
+            return this.data.users[index].name
+        } else {
+            return false
+        }
+    }
+
+
 
 }
 
