@@ -18,7 +18,7 @@ if (DB_URL) {
 }
 
 const ADMIN_ID = process.env.ADMIN_ID
-if(ADMIN_ID) {
+if (ADMIN_ID) {
     console.log("Admin ID initialised")
 } else {
     console.error("admin id not initialised!")
@@ -235,11 +235,11 @@ class database {
      */
     deleteMessages(index_from_latest = 0, delete_count = 1) {
         if ((index_from_latest || index_from_latest === 0) && delete_count) {
-
             let length = this.data.messages.length
             // 20 - 1 - 1 = 18 
             let spliced = this.data.messages.splice(length - index_from_latest - delete_count, delete_count)
             // console.log("TCL: database -> deleteMessages -> spliced", spliced)
+            console.log("delete sucesss", spliced)
 
         } else {
             console.error("Invalid index/count")
@@ -273,30 +273,49 @@ class database {
             return user.id === id
         })
         /** check if index is valid */
-        if (index > -1){
+        if (index > -1) {
             return true
         } else {
             return false
         }
     }
 
-     /**
-     * get user name for provided user id
-     * @param id provide userid
-     */
+    /**
+    * get user name for provided user id
+    * @param id provide userid
+    */
     getUserName(id) {
         /** find index of user with that id */
         let index = this.data.users.findIndex((user) => {
             return user.id === id
         })
         /** check if index is valid */
-        if (index > -1){
+        if (index > -1) {
             return this.data.users[index].name
         } else {
             return false
         }
     }
 
+    /**
+     * Set new user name for particular id provided
+     */
+    setUserName(id, new_name) {
+        if (typeof new_name === 'string' || new_name instanceof String) {
+            /** find index for particular id */
+            let index = this.data.users.findIndex((user) => {
+                return user.id === id
+            })
+            if (index > -1) {
+                this.data.users[index].name = new_name
+                console.log("username change success")
+            } else {
+                console.error("id not found!")
+            }
+        } else {
+            console.error("please provide valid new name")
+        }
+    }
 
 
 }

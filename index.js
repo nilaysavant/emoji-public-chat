@@ -30,7 +30,7 @@ app.use(morgan('dev'))
 /** DB sync interval */
 const DB_SYNC_INTERVAL = 6000 /** In MS */
 /** to reset and init DB */
-const INIT_DB = false 
+const INIT_DB = false
 
 /** Messages list Global Object*/
 let MESSAGES_LIST = []
@@ -103,7 +103,7 @@ const databaseInit = async (initDataObj) => {
 const main = async function () {
 
   /** init database */
-  if(INIT_DB) {
+  if (INIT_DB) {
     console.log("Init DB...(RESET)")
     await db.initDatabase()
   }
@@ -147,7 +147,7 @@ const main = async function () {
           if (db.userExists(id)) {
             /** get username for provided id */
             name = db.getUserName(id)
-            
+
             if ((name || name === false) && timestamp && (value || value === false)) {
 
               /** check for tag */
@@ -164,10 +164,12 @@ const main = async function () {
                     let count = parseInt(param)
                     if (Number.isInteger(count)) {
                       db.deleteMessages(0, count)
-                      console.log("delete sucesss", count)
                     } else {
                       console.error("count not integer!")
                     }
+                  } if (command === 'namechange' && param) {
+                    let new_name = param
+                    db.setUserName(id, new_name)
                   } else {
                     console.error("command invalid/not found!")
                   }
