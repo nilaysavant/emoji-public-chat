@@ -274,7 +274,6 @@ const main = async function () {
           db.data.messages.forEach((mes, indx) => {
             // console.log("TCL: mes", mes)
             old_messages.push({
-              id: mes.id,
               name: mes.name,
               timestamp: mes.timestamp,
               value: mes.value
@@ -303,7 +302,6 @@ const main = async function () {
             db.data.messages.forEach((mes, indx) => {
               // console.log("TCL: mes", mes)
               old_messages.push({
-                id: mes.id,
                 name: mes.name,
                 timestamp: mes.timestamp,
                 value: mes.value
@@ -328,7 +326,6 @@ const main = async function () {
             db.data.messages.forEach((mes, indx) => {
               // console.log("TCL: mes", mes)
               old_messages.push({
-                id: mes.id,
                 name: mes.name,
                 timestamp: mes.timestamp,
                 value: mes.value
