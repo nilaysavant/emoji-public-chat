@@ -28,8 +28,23 @@ let USER_NAME = null
  * Function returns UTC date time in yyyy-mm-dd hh:mm:ss
  */
 const getUTCDateTime = () => {
-    return new Date().toISOString().replace('T', ' ').substr(0, 19)
+    return new Date().toUTCString()
 }
+
+/** 
+ * get local time from UTC time string in format 
+ */
+const convertToLocalTime = (utc_time_string) => {
+    let new_time_inst = new Date(utc_time_string)
+    let datetime = new_time_inst.getFullYear() +
+        "-" + ('0' + (new_time_inst.getMonth() + 1)).slice(-2)
+        + "-" + ('0' + new_time_inst.getDate()).slice(-2)
+        + " " + ('0' + new_time_inst.getHours()).slice(-2)
+        + ":" + ('0' + new_time_inst.getMinutes()).slice(-2)
+        + ":" + ('0' + new_time_inst.getSeconds()).slice(-2)
+    return datetime
+}
+
 
 /** creates the html for messg item */
 const createChatMessgItem = (sender_name, date_time, messg) => {
@@ -92,7 +107,7 @@ const loadInitMessgs = () => {
                 }
                 if (data['old_messages']) {
                     data['old_messages'].forEach((messg, index) => {
-                        createChatMessgItem(messg.name, messg.timestamp, messg.value)
+                        createChatMessgItem(messg.name, convertToLocalTime(messg.timestamp), messg.value)
                     })
                     scrollToBottom(chatbox_messgbox)
                 } else {
@@ -137,7 +152,7 @@ const loadInitMessgs = () => {
                 }
                 if (data['old_messages']) {
                     data['old_messages'].forEach((messg, index) => {
-                        createChatMessgItem(messg.name, messg.timestamp, messg.value)
+                        createChatMessgItem(messg.name, convertToLocalTime(messg.timestamp), messg.value)
                     })
                     scrollToBottom(chatbox_messgbox)
                 } else {
@@ -180,7 +195,7 @@ const sendMessage = () => {
     let message_text = typeBox.value
     /** clear input type box */
     typeBox.value = ""
-    
+
     /** get date time */
     let datetime = getUTCDateTime()
 
@@ -198,7 +213,7 @@ const sendMessage = () => {
     socket.emit('chat', message, (data) => {
         console.log("Recvd:", data);
         if (data || data === false) {
-            createChatMessgItem(data['name'], data['timestamp'], data['value'])
+            createChatMessgItem(data['name'], convertToLocalTime(data['timestamp']), data['value'])
             scrollToBottom(chatbox_messgbox)
         }
     });
@@ -222,7 +237,7 @@ const MAIN = () => {
     socket.on('chat', (data) => {
         console.log("Recvd:", data)
         if (data || data === false) {
-            createChatMessgItem(data['name'], data['timestamp'], data['value'])
+            createChatMessgItem(data['name'], convertToLocalTime(data['timestamp']), data['value'])
             scrollToBottom(chatbox_messgbox)
         }
     })

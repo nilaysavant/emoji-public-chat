@@ -35,7 +35,7 @@ app.use(morgan('dev'))
 /** Custom Variables START -----------------------------------------------------*/
 
 /** DB sync interval */
-const DB_SYNC_INTERVAL = 15000 /** In MS */
+const DB_SYNC_INTERVAL = 6000 /** In MS */
 /** to reset and init DB */
 const INIT_DB = false
 
@@ -82,10 +82,10 @@ function errorHandler(err, req, res, next) {
 /** CUSTOM FUNCTION START ------------------------------------------------------- */
 
 /**
- * Function returns UTC date time in yyyy-mm-dd hh:mm:ss
+ * Function returns UTC date time
  */
 const getUTCDateTime = () => {
-  return new Date().toISOString().replace('T', ' ').substr(0, 19)
+  return new Date().toUTCString()
 }
 
 /** Database functions START--------------------------------------- */
@@ -166,7 +166,8 @@ const main = async function () {
 
         let id = messg.id
         let name = null
-        let timestamp = messg.timestamp
+        /** set messg timestamp to UTC */
+        messg.timestamp = getUTCDateTime()
         let value = messg.value
 
         /** strip messg value to only emojis after storing it in value */
@@ -180,7 +181,7 @@ const main = async function () {
             /** get username for provided id */
             name = db.getUserName(id)
 
-            if ((name || name === false) && timestamp && (value || value === false)) {
+            if ((name || name === false) && (value || value === false)) {
 
               /** check for tag */
               if (value.startsWith(TAG)) {
