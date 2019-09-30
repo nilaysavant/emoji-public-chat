@@ -1,5 +1,5 @@
 /**
- * Emoji chat v1.2.2
+ * Emoji chat v1.2.3
  * 
  */
 

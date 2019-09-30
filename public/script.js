@@ -1,3 +1,6 @@
+/**
+ * Emojichat v1.2.3
+ */
 const socket = io();
 
 /** get dom objects */
