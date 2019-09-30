@@ -1,5 +1,5 @@
 /**
- * Emoji chat v1.2.3
+ * Emoji chat v1.2.4
  * 
  */
 
@@ -35,7 +35,7 @@ app.use(morgan('dev'))
 /** Custom Variables START -----------------------------------------------------*/
 
 /** DB sync interval */
-const DB_SYNC_INTERVAL = 6000 /** In MS */
+const DB_SYNC_INTERVAL = 15000 /** In MS */
 /** to reset and init DB */
 const INIT_DB = false
 
@@ -185,11 +185,11 @@ const main = async function () {
 
               /** check for tag */
               if (value.startsWith(TAG)) {
-                let comm = value.split('!')[1]
+                let comm = value.split('|')[1]
                 console.log('----- proces COMM ------:', comm)
                 /** process comm */
                 if (comm) {
-                  let split_comm = comm.split(',')
+                  let split_comm = comm.split(':')
                   let command = split_comm[0]
                   let param1 = split_comm[1]
                   let param2 = split_comm[2]
