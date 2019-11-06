@@ -132,7 +132,14 @@ class database {
      */
     async initDatabase() {
         this.resetDataObj()
-        let status = await this.pushData()
+        let status
+        try {
+          status = await this.pushData()
+        }
+        catch (error) {
+          console.log("error", error)
+          return false
+        }
         if (status) {
             return true
         } else {
@@ -145,8 +152,16 @@ class database {
      * Get data from DB
      */
     async getData() {
-        let resp = await axios.get(DB_URL)
-        let temp_db = resp.data.result
+      let resp;
+      try {
+        resp = await axios.get(DB_URL)
+      }
+      catch (error) {
+        console.log("error", error)
+        return false
+      }
+        // console.log("resp", resp)
+        let temp_db = resp.data
         /** check if db contains data already */
         if (temp_db) {
             if (Object.keys(temp_db).length > 0) {
@@ -223,7 +238,7 @@ class database {
      */
     async pushData() {
         // console.log("TCL: database -> pushData -> this.data", this.data)
-        let status = await axios.post(DB_URL, this.data)
+        let status = await axios.put(DB_URL, this.data)
         if (status) {
             return true
         } else {
